@@ -75,3 +75,22 @@ with data_col_2:
         options=list(get_team_colours("all").keys()) + ["Custom"],
         key="team_colours",
     )
+    team_colours: dict = (
+        get_team_colours(team=selected_team)
+        if selected_team != "Custom"
+        else {"primary": "#808080", "secondary": "#ffffff"}
+    )
+
+    # Display the team colours to the user
+    primary: str = st.color_picker(
+        label="Primary colour",
+        value=team_colours["primary"],
+        disabled=True if selected_team != "Custom" else False,
+    )
+    st.markdown(f"{selected_team}'s primary colour is **{primary}**")
+    secondary: str = st.color_picker(
+        label="Secondary colour",
+        value=team_colours["secondary"],
+        disabled=True if selected_team != "Custom" else False,
+    )
+    st.markdown(f"{selected_team}'s secondary colour is **{secondary}**")
