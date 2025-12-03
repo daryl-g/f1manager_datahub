@@ -42,7 +42,7 @@ def get_team_colours(
 
 
 @st.cache_resource
-def get_schedule(year: int) -> dict:
+def get_schedule(year: int) -> dict | list:
     """
     Get previous F1 race schedules.
 
@@ -53,9 +53,9 @@ def get_schedule(year: int) -> dict:
         (dict): Information about previous F1 season's race schedule.
     """
     # Input checking
-    if year not in [2024, 2025]:
+    if year not in [0, 2024, 2025]:
         raise ValueError(
-            "The app only currently supports schedule for 2024 and 2025 cause I'm too lazy."
+            "The app only currently supports schedule for 2024 and 2025 or 0 for custom cause I'm too lazy."
         )
 
     grand_prixes: list[str] = [
@@ -154,3 +154,5 @@ def get_schedule(year: int) -> dict:
                 schedule_2025[race] = False
 
         return schedule_2025
+    elif year == 0:
+        return grand_prixes

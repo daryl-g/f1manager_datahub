@@ -19,7 +19,7 @@ title_header(
 )
 st.html(
     f"""
-    <hr style='border-width: .5px; border-color: {palette["border-color"]}; margin-bottom: 0em;' />
+    <hr style='border-width: .10px; border-color: {palette["border-color"]}; margin-bottom: 0em;' />
     """
 )
 
@@ -37,35 +37,35 @@ with data_col_1:
         options=["2024", "2025", "Custom"],
         key="schedule_year",
     )
-    schedule: dict = (
-        get_schedule(int(selected_year)) if selected_year in ["2024", "2025"] else {}
+    schedule: dict | list = (
+        get_schedule(int(selected_year))
+        if selected_year in ["2024", "2025"]
+        else get_schedule(year=0)
     )
 
     with st.expander(f"{selected_year} schedule"):
-        schedule_col_1, schedule_col_2 = st.columns([0.8, 0.2], border=False)
-        for i in range(1, 25):
-            schedule_col_1.selectbox(
-                label=f"Race {i}",
-                options=(
-                    list(schedule.keys())[i - 1]
-                    if selected_year in ["2024", "2025"]
-                    else list(schedule.keys())
-                ),
-                disabled=True if selected_year in ["2024", "2025"] else False,
-            )
-            schedule_col_2.checkbox(
-                label="Sprint?",
-                value=(
-                    list(schedule.values())[i - 1]
-                    if selected_year in ["2024", "2025"]
-                    else False
-                ),
-                help=(
-                    "Check if this grand prix has a Sprint weekend" if i == 1 else None
-                ),
-                key=f"sprint_{i}",
-                disabled=True if selected_year in ["2024", "2025"] else False,
-            )
+        # Layout
+        rows = [st.columns([0.7, 0.3], border=True, gap="small") for _ in range(25)]
+
+        # Prefilled schedule
+        if selected_year in ["2024", "2025"]:
+            for i, (gp, is_sprint) in enumerate(schedule.items()):
+                with rows[i][0]:
+                    st.text_input(
+                        label=f"Race {i+1}",
+                        value=gp,
+                        key=f"race_{i}",
+                        disabled=True,
+                    )
+                with rows[i][1]:
+                    st.checkbox(
+                        label="Sprint",
+                        value=is_sprint,
+                        key=f"sprint_{i}",
+                        disabled=True,
+                    )
+
+        # Custom schedule
 
 # Column 2: Team colours
 with data_col_2:
@@ -81,16 +81,28 @@ with data_col_2:
         else {"primary": "#808080", "secondary": "#ffffff"}
     )
 
+    # Layout
+    teamcolours_row_1 = st.columns([0.1, 0.9], border=False, gap="small")
+    teamcolours_row_2 = st.columns([0.1, 0.9], border=False, gap="small")
+
     # Display the team colours to the user
-    primary: str = st.color_picker(
+    primary: str = teamcolours_row_1[0].color_picker(
         label="Primary colour",
         value=team_colours["primary"],
         disabled=True if selected_team != "Custom" else False,
+        label_visibility="collapsed",
     )
-    st.markdown(f"{selected_team}'s primary colour is **{primary}**")
-    secondary: str = st.color_picker(
+    teamcolours_row_1[1].markdown(
+        f"""{selected_team}'s primary colour: <span style="color: {primary}; font-weight: bold">{primary}</span>""",
+        unsafe_allow_html=True,
+    )
+    secondary: str = teamcolours_row_2[0].color_picker(
         label="Secondary colour",
         value=team_colours["secondary"],
         disabled=True if selected_team != "Custom" else False,
+        label_visibility="collapsed",
     )
-    st.markdown(f"{selected_team}'s secondary colour is **{secondary}**")
+    teamcolours_row_2[1].markdown(
+        f"""{selected_team}'s secondary colour: <span style="color: {secondary if secondary != "#1a1a1a" else "#ffffff"}; font-weight: bold">{secondary}</span>""",
+        unsafe_allow_html=True,
+    )

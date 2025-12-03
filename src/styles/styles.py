@@ -230,6 +230,15 @@ class Styles:
         .stMain {
             background-color: %s !important;  /* Main container background */
         }
+
+        /* Override Streamlit's input font */
+        .st-at {
+            font-family: 'Formula1' !important;
+        }
+
+        input, textarea, select, [data-testid="stWidgetLabel"], [data-testid="stMarkdownContainer"] {
+            font-family: 'Formula1' !important;
+        }
         """ % (
             body_bg,
             body_text,
@@ -268,6 +277,11 @@ class Styles:
         .stTextInput, .stTextArea, .stNumberInput, .stDateInput {
             background-color: %s !important;  /* Input box background */
             color: %s !important;  /* Input box text color */
+            font-family: 'Formula1' !important;
+        }
+
+        .stTextInput > div > div > input {
+            font-family: 'Formula1' !important;
         }
         """ % (
             input_bg,
@@ -479,6 +493,10 @@ class Styles:
             border-color: %s !important; /* Expander border color */
         }
 
+        .stExpander > details > summary > span > div > div > p {
+            font-family: 'Formula1Bold' !important;
+        }
+
         .stExpander > details > summary:focus, summary:focus-within {
             background-color: %s !important; /* Expander summary background color */
             color: %s !important; /* Expander summary text color */
@@ -535,6 +553,7 @@ class Styles:
 
         .stDateInput > label, .stButtonGroup > label, .stSelectbox > label, .stRadio > label, .stSlider > label, .stRadio > div > label > div {
             color: %s !important;  /* Widgets label color */
+            font-family: 'Formula1Bold' !important;
         }
 
         .stButtonGroup > label > label > .stTooltipIcon > .stTooltipHoverTarget > svg.icon {
