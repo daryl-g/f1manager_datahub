@@ -34,21 +34,22 @@ with data_col_1:
     st.markdown("### Race schedule")
     selected_year: str = st.selectbox(
         label="Schedule year",
-        options=["2024", "2025", "Custom"],
+        options=["2024", "2025"],  # "Custom"],
         key="schedule_year",
     )
-    schedule: dict | list = (
-        get_schedule(int(selected_year))
-        if selected_year in ["2024", "2025"]
-        else get_schedule(year=0)
-    )
 
-    with st.expander(f"{selected_year} schedule"):
-        # Layout
-        rows = [st.columns([0.7, 0.3], border=True, gap="small") for _ in range(25)]
-
-        # Prefilled schedule
+    with st.expander(
+        f"{selected_year} schedule", expanded=True, icon=":material/event:"
+    ):
+        # Prefilled schedule (assuming that `schedule` is a prefilled dict)
         if selected_year in ["2024", "2025"]:
+            # Get the schedule
+            schedule: dict = get_schedule(int(selected_year))
+            # Layout
+            rows: list = [
+                st.columns([0.7, 0.3], border=True, gap="small") for _ in range(25)
+            ]
+            # Fill in the schedule
             for i, (gp, is_sprint) in enumerate(schedule.items()):
                 with rows[i][0]:
                     st.text_input(
@@ -61,11 +62,37 @@ with data_col_1:
                     st.checkbox(
                         label="Sprint",
                         value=is_sprint,
-                        key=f"sprint_{i}",
+                        key=f"sprint_{i+1}",
                         disabled=True,
                     )
 
-        # Custom schedule
+        # Custom schedule (assuming that `schedule` is just a list of grand prixes)
+        # else:
+        #     selected_races: dict = {}  # Structure: grand_prix (str) - is_sprint (bool)
+
+        #     # Initialise it in the app's session storage if it doesn't exist
+        #     if "selected_races" not in st.session_state:
+        #         st.session_state.selected_races = selected_races
+        #     else:
+        #         selected_races = st.session_state.selected_races
+
+        #     # Check if the user has already prefilled a dict of races or not
+        #     if len(selected_races) == 24:
+        #         for i, (gp, is_sprint) in enumerate(selected_races.items()):
+        #             with rows[i][0]:
+        #                 st.text_input(
+        #                     label=f"Race {i+1}",
+        #                     value=gp,
+        #                     key=f"race_{i}",
+        #                     disabled=True,
+        #                 )
+        #             with rows[i][1]:
+        #                 st.checkbox(
+        #                     label="Sprint",
+        #                     value=is_sprint,
+        #                     key=f"sprint_{i}",
+        #                     disabled=True,
+        #                 )
 
 # Column 2: Team colours
 with data_col_2:

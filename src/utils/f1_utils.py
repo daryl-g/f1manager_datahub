@@ -41,7 +41,7 @@ def get_team_colours(
         return team_colours.get(team, {"primary": "#808080", "secondary": "#ffffff"})
 
 
-@st.cache_resource
+# @st.cache_resource
 def get_schedule(year: int) -> dict | list:
     """
     Get previous F1 race schedules.
