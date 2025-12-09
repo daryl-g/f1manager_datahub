@@ -22,6 +22,16 @@ def navigation() -> None:
             title="Data Input",
             icon=":material/edit:",
         ),
+        st.Page(
+            page="pages/race_data.py",
+            title="Race Data",
+            icon=":material/bar_chart:",
+        ),
+        st.Page(
+            page="pages/strategy_hub.py",
+            title="Strategy Hub",
+            icon=":material/sports_score:",
+        ),
     ]
 
     pg = st.navigation(pages, position="top")
